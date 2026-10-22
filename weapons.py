@@ -42,17 +42,15 @@ class RangedWeapon(Weapon):
             file.write(self.__repr__() + "\n")
 
 class MagicWeapon(Weapon):
-    def __init__(self, name: str, damage: int, cost: int):
+    def __init__(self, name: str, damage: int, range: int, cost: int):
         super().__init__(name, damage)
-        # Magic weapon-specific attribute: mana cost
+        self.range = range
         self.cost = cost
 
     def __repr__(self) -> str:
-        # String format used for saving and debugging
-        return f"MagicWeapon,{self.name},{self.damage},{self.cost}"
-    
+        return f"MagicWeapon,{self.name},{self.damage},{self.range},{self.cost}"
+
     def save(self, filename: str) -> None:
-        # Saves magic weapon data in CSV format to file
         with open(filename, "a") as file:
             file.write(self.__repr__() + "\n")
 
@@ -71,6 +69,6 @@ def attack(attacker: Character, weapon: Weapon, target: Character, distance: int
         raise ValueError("The target is beyond the weapon's range.")
 
     # Reduce target's health by weapon's damage
-    target.health -= weapon.damage
+    target.health = max(0, target.health - weapon.damage)
     print(f"{attacker.name} attacks {target.name} with {weapon.name}, dealing {weapon.damage} damage!")
     print(f"{target.name}'s remaining health: {target.health}")
